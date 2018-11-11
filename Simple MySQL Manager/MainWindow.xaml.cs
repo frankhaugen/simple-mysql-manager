@@ -1,8 +1,10 @@
 ﻿using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -47,39 +49,90 @@ namespace Simple_MySQL_Manager
 		private MySqlCommand mySqlCommand = null;
 		private string query = "";
 
+		private StringBuilder welcomMessage = new StringBuilder();
+		private string serverFile = "servers.json";
+
+		// Debugging
+		private string debugServerFile = "server.secret"; // For debugging purposes 
+		private bool debugmode = false; // For debugging purposes 
 
 		public MainWindow()
 		{
 			InitializeComponent();
 
-			if (File.Exists("server.secret"))
+
+			if (System.Diagnostics.Debugger.IsAttached)
 			{
-				servers = JsonConvert.DeserializeObject<Servers>(File.ReadAllText("server.secret"));
+				debugmode = true;
+			}
+
+			if (debugmode && File.Exists(debugServerFile)) { serverFile = debugServerFile; } // For debugging purposes 
+
+			if (File.Exists(serverFile))
+			{
+				servers = JsonConvert.DeserializeObject<Servers>(File.ReadAllText(serverFile));
 				SelectSaved.ItemsSource = servers.GetServers;
 				SelectSaved.SelectedItem = SelectSaved.Items[0];
 				SelectionBox.Visibility = Visibility.Visible;
 			}
 
+			CreatWelcomeText();
+			MessageBox.Show(welcomMessage.ToString(), "Welcome", MessageBoxButton.OK, MessageBoxImage.Information);
+		}
+
+		private void CreatWelcomeText()
+		{
+			welcomMessage.AppendLine("Welcome to Simple MySQL Manager");
+			welcomMessage.AppendLine("");
+			welcomMessage.AppendLine("This simple tool will ease your database management.");
+			welcomMessage.AppendLine("Unfortunately, for now, this tool is read-only,");
+			welcomMessage.AppendLine("but we are working to improve this tool");
+			welcomMessage.AppendLine("");
+			welcomMessage.AppendLine("How-To:");
+			welcomMessage.AppendLine("Either enter your database login-info manually,");
+			welcomMessage.AppendLine("or edit/add the json-file named servers.json");
+			welcomMessage.AppendLine("in the application's directory.");
+			welcomMessage.AppendLine("");
+			welcomMessage.AppendLine("This is released under the MIT License.");
+			welcomMessage.AppendLine("Created by Frank R. Haugen");
+
 		}
 
 		private void BuildString()
 		{
-			connectionStringBuilder.Server = ServerField.Password;
-			connectionStringBuilder.Database = DatabaseField.Password;
-			connectionStringBuilder.UserID = UsernameField.Password;
-			connectionStringBuilder.Password = PasswordField.Password;
+			connectionStringBuilder.Server = ServerField.Text;
+			connectionStringBuilder.Database = DatabaseField.Text;
+			connectionStringBuilder.UserID = UsernameField.Text;
+			connectionStringBuilder.Password = PasswordField.Text;
 		}
 
 
 		private void SubmitButton_Click(object sender, RoutedEventArgs e)
 		{
-			BuildString();
+			if (ServerField.Text != "" || DatabaseField.Text != "" || UsernameField.Text != "" || PasswordField.Text != "")
+			{
+				try
+				{
+					BuildString();
 
-			tabItems.Clear();
-			CollectTables();
-			CreateGrids();
+					Tabs.ItemsSource = null;
+					tabItems.Clear();
+					CollectTables();
+					CreateGrids();
 
-			Tabs.ItemsSource = tabItems;
+					Tabs.ItemsSource = tabItems;
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message);
+				}
+			}
+			else
+			{
+				MessageBox.Show("All fields must be filled");
+			}
+
+
 		}
 
 		private void CollectTables()
@@ -125,10 +178,10 @@ namespace Simple_MySQL_Manager
 		{
 			Server server = (sender as ComboBox).SelectedItem as Server;
 
-			ServerField.Password = server.Address;
-			DatabaseField.Password = server.Database;
-			PasswordField.Password = server.Password;
-			UsernameField.Password = server.Username;
+			ServerField.Text = server.Address;
+			DatabaseField.Text = server.Database;
+			PasswordField.Text = server.Password;
+			UsernameField.Text = server.Username;
 		}
 
 		private void CreateGrids()

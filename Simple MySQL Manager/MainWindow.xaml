@@ -10,24 +10,32 @@
 		<GroupBox Header="Login data">
 			<StackPanel Orientation="Horizontal">
 				<GroupBox Header="Saved servers" Visibility="Collapsed" Name="SelectionBox">
-					<ComboBox Name="SelectSaved" ItemsSource="{Binding Path=servers }" DisplayMemberPath="Friendlyname" Width="128" SelectionChanged="SelectSaved_SelectionChanged" />
+					<ComboBox Name="SelectSaved" ItemsSource="{Binding Path=servers }" DisplayMemberPath="Friendlyname" Width="256" SelectionChanged="SelectSaved_SelectionChanged" />
 				</GroupBox>
 				<GroupBox Header="Server">
-					<PasswordBox Name="ServerField" Width="128" />
+					<TextBox Name="ServerField" MinWidth="128" />
 				</GroupBox>
 				<GroupBox Header="Database">
-					<PasswordBox Name="DatabaseField" Width="128" />
+					<TextBox Name="DatabaseField" MinWidth="128" />
 				</GroupBox>
 				<GroupBox Header="Username">
-					<PasswordBox Name="UsernameField" Width="128" />
+					<TextBox Name="UsernameField" MinWidth="128" />
 				</GroupBox>
 				<GroupBox Header="Password">
-					<PasswordBox Name="PasswordField" Width="128" />
+					<TextBox Name="PasswordField" MinWidth="128" />
 				</GroupBox>
 				<GroupBox BorderThickness="0" Header="">
 					<Button Name="SubmitButton" Content="Submit" Click="SubmitButton_Click"  />
 				</GroupBox>
 			</StackPanel>
+		</GroupBox>
+		<GroupBox Header="SQL query" Visibility="Collapsed">
+			<StackPanel>
+				<TextBox Name="QueryField" TextWrapping="Wrap" SpellCheck.IsEnabled="True" AcceptsReturn="True" AcceptsTab="True" MaxWidth="1024" />
+				<Button Name="ExecuteQuery" Content="Execute" Width="64" HorizontalAlignment="Right" Margin="7" />
+			</StackPanel>
+
+
 		</GroupBox>
 		<TabControl Name="Tabs" ItemsSource="{Binding}" Visibility="Visible" Width="1024" Height="512" />
 	</StackPanel>
