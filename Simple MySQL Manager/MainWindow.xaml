@@ -5,8 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Simple_MySQL_Manager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Simple MySQL Manager" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+	<StackPanel>
+		<GroupBox Header="Login data">
+			<StackPanel Orientation="Horizontal">
+				<GroupBox Header="Saved servers" Visibility="Collapsed" Name="SelectionBox">
+					<ComboBox Name="SelectSaved" ItemsSource="{Binding Path=servers }" DisplayMemberPath="Friendlyname" Width="128" SelectionChanged="SelectSaved_SelectionChanged" />
+				</GroupBox>
+				<GroupBox Header="Server">
+					<PasswordBox Name="ServerField" Width="128" />
+				</GroupBox>
+				<GroupBox Header="Database">
+					<PasswordBox Name="DatabaseField" Width="128" />
+				</GroupBox>
+				<GroupBox Header="Username">
+					<PasswordBox Name="UsernameField" Width="128" />
+				</GroupBox>
+				<GroupBox Header="Password">
+					<PasswordBox Name="PasswordField" Width="128" />
+				</GroupBox>
+				<GroupBox BorderThickness="0" Header="">
+					<Button Name="SubmitButton" Content="Submit" Click="SubmitButton_Click"  />
+				</GroupBox>
+			</StackPanel>
+		</GroupBox>
+		<TabControl Name="Tabs" ItemsSource="{Binding}" Visibility="Visible" Width="1024" Height="512" />
+	</StackPanel>
 </Window>
