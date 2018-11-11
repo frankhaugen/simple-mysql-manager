@@ -74,6 +74,8 @@ namespace Simple_MySQL_Manager
 		private void SubmitButton_Click(object sender, RoutedEventArgs e)
 		{
 			BuildString();
+
+			tabItems.Clear();
 			CollectTables();
 			CreateGrids();
 
@@ -122,7 +124,7 @@ namespace Simple_MySQL_Manager
 		private void SelectSaved_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Server server = (sender as ComboBox).SelectedItem as Server;
-			MessageBox.Show(server.Address);
+
 			ServerField.Password = server.Address;
 			DatabaseField.Password = server.Database;
 			PasswordField.Password = server.Password;
@@ -131,7 +133,6 @@ namespace Simple_MySQL_Manager
 
 		private void CreateGrids()
 		{
-
 			foreach (TabItem tabItem in tabItems)
 			{
 				DataTable dataTable = new DataTable();
